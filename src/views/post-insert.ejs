@@ -1,0 +1,42 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inserir</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+
+    <div class="container">
+    
+    <%- include('./includes/navbar') %>
+    
+    <main>
+<h1>Cadastrar novo post</h1>
+        <div class="form">            
+            <form action="/posts/" method="post">
+                <label for="title">Título do post:</label>
+                <input type="text" name="title">
+                <br>                
+                <br>
+                <label for="author">Autor do post:</label>
+                <input type="text" name="author">
+                <br>                
+                <label for="description">Texto do post:</label>
+                <br>  
+                <textarea name="description"> 
+                </textarea>
+                
+                <br>  
+                <br>  
+                <button type="submit">Cadastra</button>
+            </form>
+        </div>
+    </main>
+    </div>
+</body>
+</html>

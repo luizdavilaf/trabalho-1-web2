@@ -1,0 +1,128 @@
+* {
+    padding: 0;
+    margin: 0;
+    background-color: rgb(27, 36, 48);
+    color: rgb(214, 213, 168);
+    
+    /* border: 1px solid gray;  */
+}
+
+
+ h1 {
+     color: rgb(129, 103, 151)
+ }
+
+.form {
+    border: 1px solid rgb(214, 213, 168);
+        border-radius: 5px;
+        height: 100px;
+        width: 100%;
+        background-color: rgb(81, 85, 126);
+        box-sizing: border-box;
+        display: inline;
+    
+}
+.mainContainer{
+    border: 1px solid rgb(214, 213, 168);
+    width: 1715px;
+    
+}
+
+img {
+    border-radius: 8px;
+    margin: 15px;
+}
+
+textarea {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    height: 200px;
+    box-sizing: border-box;
+    border: 2px solid rgb(214, 213, 168);
+    border-radius: 4px;
+    border-bottom: 2px solid rgb(129, 103, 151);
+    background-color: rgb(81, 85, 126)
+}
+
+
+input[type=text] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 2px solid rgb(214, 213, 168);
+    border-radius: 4px;
+    border-bottom: 2px solid rgb(129, 103, 151);
+    background-color: rgb(81, 85, 126)
+}
+
+.btn-danger{
+    background-color: rgb(201, 67, 67);
+    width: 50px;
+    height: 30px;
+}
+
+.btn-warning {
+    background-color:gold;
+    width: 50px;
+    height: 30px;
+    color:black;
+}
+.container {
+    border: 1px solid gray;
+    border-radius: 5px;
+    display: flex;
+}
+
+.image_container{
+    border: 2px solid rgb(214, 213, 168);
+    height: 100px;
+    width: 100px;
+    padding: 12px 20px;
+    margin: 8px 0;
+}
+
+nav ul {
+    height: 100%;
+    list-style: none;
+}
+
+li {
+    height: 40px;
+    width: 200px
+}
+
+li:hover {
+    background-color: rgb(129, 103, 151);
+}
+
+main {
+    max-width: 90%;
+}
+
+.post-card {
+    border: 1px solid rgb(214, 213, 168);
+    border-radius: 5px;
+    height: 100px;
+    width: 100%;
+    text-align: center;
+    display: table;
+   
+    
+    margin: 15px;
+    
+}
+
+.post-list {
+    display: flex;
+    flex-wrap: wrap;
+
+}
+
+ #child {
+     display: table-cell;
+     vertical-align: middle;    
+    text-align: center;
+    background-color: rgb(81, 85, 126);
+ }

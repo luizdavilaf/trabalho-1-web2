@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/main.css">    
+    <title><%= post.title %></title>
+    <script>
+        function apagaPost()
+        {        
+            var x;
+            var r=confirm("Você deseja apagar o post?");
+            if (r==true)
+            {            
+                return location.href= '/posts/delete/<%=post.id%>'
+            }         
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+    <%- include('./includes/navbar') %>
+    <main>
+        <div class="mainContainer">
+        <h5><%= post.created_at %> </h5>   
+        <h1><%= post.title %></h1>
+        <h4>por <%= post.author %></h4>
+        <br>
+        <br>
+        <button onclick="apagaPost()" type="button" class="btn btn-danger">Excluir</button>
+        <br>
+        <button onclick="location.href= '/posts/edit/<%=post.id%>'" type="button" class="btn btn-warning">Editar</button>
+
+        
+    
+        <br>
+        <br>
+        
+        <div class="Postcontainer">    
+            <div class="containerText">
+                <%= post.description %>
+            </div>  
+        <br>    
+            
+        
+            <% for (let i = 0; i < post.images.length; i++) { %> 
+                
+            <img src=<%=post.images[i]%> width="300" height="300" >
+            <% } %>
+        </div>
+    </div>
+    </main>
+  </div>      
+</body>
+</html>
