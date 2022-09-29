@@ -43,11 +43,12 @@
             </div>  
         <br>    
             
-        
-            <% for (let i = 0; i < post.images.length; i++) { %> 
-                
-            <img src=<%=post.images[i]%> width="300" height="300" >
-            <% } %>
+            <div class="images-container"> 
+                <% for (let i = 0; i < post.images.length; i++) { %> 
+                    
+                <img src=<%=post.images[i]%> width="300" height="300" >
+                <% } %>
+            </div>
         </div>
     </div>
     </main>

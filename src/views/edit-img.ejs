@@ -15,6 +15,7 @@
         <h1>Inserir imagem no post</h1>
         <div class="form">            
                 <form action="/posts/eimage/edit-images/" method="post">
+                    
                     <label for="img1">Imagem 1:</label>                    
                     <input type="text" name="images[0][link]"  value="<%=images[0].link%>">
                     <br>    
@@ -28,7 +29,8 @@
                     <input type="text" name="images[3][link]"  value="<%=images[3].link%>">
                     <br>                
                     <label for="img5">Imagem 5:</label>
-                    <input type="text" name="images[4][link]"  value="<%=images[4].link%>">
+                    <input type="text" name="images[4][link]"  value="<%=images[4].link%>">                    
+                    
                     <input type="hidden" name="images[0][post]" value="<%=images[0].post%>">
                     <input type="hidden" name="images[0][id]" value="<%=images[0].id%>">
                     <input type="hidden" name="images[1][id]" value="<%=images[1].id%>">

@@ -10,18 +10,40 @@
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
-
-    <div class="container">
-  
-    <%- include('./includes/navbar') %>
-    
+    <div class="container">  
+    <%- include("./includes/navbar") %>
+    <script>
+    const params = new URLSearchParams(window.location.search)
+    const actualPage = params.get('page')  
+    const next = actualPage+1
+    const previous = actualPage-1
+    </script>
     <main>
-        <h1>LISTAGEM - <%= users.length %></h1>
-       
+
+        <h1>LISTAGEM - <%= lastPostsPaginated.length %></h1>
+
+        
+        <% if (page==1) { %>
+        <a href="#" disabled class="previous1">&laquo; Previous</a>       
+        <% } else {%>
+        <a href="/posts/?limit=5&page=<%=previous%>" class="previous1">&laquo; Previous</a>
+        <%page } %>
+        <% if (page==totalPages) { %> 
+        <a href="<%totalPages%>" disabled class="next1">Next &raquo;</a>                   
+        <% } else { %><a href="/posts/?limit=5&page=<%=next%>" class="next1">Next &raquo;</a><% } %>
+        
+        <form action="/posts/" method="get" class="search-bar">
+        <input type="text" placeholder="Search.." name="title">
+        <button type="submit">Submit</button>
+        </form>
+
+        
         <ul class="post-list">
-        <% for (let i = 0; i < users.length; i++) { %>
-            <%- include('./includes/post/show', { user: users[i] })%>
-        <% } %> 
+        
+        
+        <% for (let i = 0; i < lastPostsPaginated.length; i++) { %>
+            <%- include("./includes/post/show-post",  {post: lastPostsPaginated[i]}) %>
+        <%}  %> 
         </ul>
     </main>
     </div>
