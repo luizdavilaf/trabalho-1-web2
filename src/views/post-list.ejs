@@ -19,32 +19,36 @@
     const previous = actualPage-1
     </script>
     <main>
+        <div class="mainContainer">
+            <h1>LISTAGEM - <%= lastPostsPaginated.length %></h1>
 
-        <h1>LISTAGEM - <%= lastPostsPaginated.length %></h1>
+            
+            <% if (page==1) { %>
+            <a href="#" disabled class="previous1">&laquo; Anterior</a>       
+            <% } else {%>
+            <a href="/posts/?limit=5&page=<%=previous%>" class="previous1">&laquo; Anterior</a>
+            <%page } %>
+            <% if (page==totalPages) { %> 
+            <a href="<%totalPages%>" disabled class="next1">Próximo &raquo;</a>                   
+            <% } else { %><a href="/posts/?limit=5&page=<%=next%>" class="next1">Próximo &raquo;</a><% } %>
+            
+            <div class="search-container">
+                <form action="/posts/" method="get" class="search-bar">
+                <input type="text" placeholder="Busca por título...Pressione enter para buscar" name="title">
+                
+                </form>
+            </div>
+            
 
-        
-        <% if (page==1) { %>
-        <a href="#" disabled class="previous1">&laquo; Previous</a>       
-        <% } else {%>
-        <a href="/posts/?limit=5&page=<%=previous%>" class="previous1">&laquo; Previous</a>
-        <%page } %>
-        <% if (page==totalPages) { %> 
-        <a href="<%totalPages%>" disabled class="next1">Next &raquo;</a>                   
-        <% } else { %><a href="/posts/?limit=5&page=<%=next%>" class="next1">Next &raquo;</a><% } %>
-        
-        <form action="/posts/" method="get" class="search-bar">
-        <input type="text" placeholder="Search.." name="title">
-        <button type="submit">Submit</button>
-        </form>
-
-        
-        <ul class="post-list">
-        
-        
-        <% for (let i = 0; i < lastPostsPaginated.length; i++) { %>
-            <%- include("./includes/post/show-post",  {post: lastPostsPaginated[i]}) %>
-        <%}  %> 
-        </ul>
+            
+            <ul class="post-list">
+            
+            
+            <% for (let i = 0; i < lastPostsPaginated.length; i++) { %>
+                <%- include("./includes/post/show-post",  {post: lastPostsPaginated[i]}) %>
+            <%}  %> 
+            </ul>
+        </div>
     </main>
     </div>
 </body>

@@ -26,10 +26,13 @@
         <h5><%= post.created_at %> </h5>   
         <h1><%= post.title %></h1>
         <h4>por <%= post.author %></h4>
+        <p></p>
         <br>
+        <hr width="30%" align="LEFT">
+       
         <br>
         <button onclick="apagaPost()" type="button" class="btn btn-danger">Excluir</button>
-        <br>
+        
         <button onclick="location.href= '/posts/edit/<%=post.id%>'" type="button" class="btn btn-warning">Editar</button>
 
         

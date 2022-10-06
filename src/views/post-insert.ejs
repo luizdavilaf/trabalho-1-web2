@@ -16,25 +16,27 @@
     <%- include('./includes/navbar') %>
     
     <main>
-<h1>Cadastrar novo post</h1>
-        <div class="form">            
-            <form action="/posts/" method="post">
-                <label for="title">Título do post:</label>
-                <input type="text" name="title">
-                <br>                
-                <br>
-                <label for="author">Autor do post:</label>
-                <input type="text" name="author">
-                <br>                
-                <label for="description">Texto do post:</label>
-                <br>  
-                <textarea name="description"> 
-                </textarea>
-                
-                <br>  
-                <br>  
-                <button type="submit">Cadastra</button>
-            </form>
+        <div class="mainContainer">
+            <h1>Cadastrar novo post</h1>
+            <div class="form">            
+                <form action="/posts/" method="post">
+                    <label for="title">Título do post:</label>
+                    <input type="text" name="title" required>
+                    <br>                
+                    <br>
+                    <label for="author">Autor do post:</label>
+                    <input type="text" name="author" required>
+                    <br>                
+                    <label for="description">Texto do post:</label>
+                    <br>  
+                    <textarea name="description" required> 
+                    </textarea>
+                    
+                    <br>  
+                    <br>  
+                    <button type="submit" class="btn btn-common">Cadastra</button>
+                </form>
+            </div>
         </div>
     </main>
     </div>

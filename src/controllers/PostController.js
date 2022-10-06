@@ -21,12 +21,6 @@ class PostController {
         return -1;
     };
 
-    groupBy = function (list, key) {
-        return list.reduceRight(function (rv, x) {
-            (rv[x[key]] = rv[x[key]] || []).push(x);
-            return rv;
-        }, {});
-    };
 
     create(req, res) {
         var title;
@@ -108,6 +102,7 @@ class PostController {
                 console.log(err);
                 return res.status(500).send("ERRO AO EXCLUIR");
             }
+            this.deletePostImages(id)
             return res.redirect("/posts");
         });
     }
@@ -124,15 +119,13 @@ class PostController {
         });
     }
 
-    deletePostImages(req, res) {
-        const { id } = req.params;
+    deletePostImages(id) {        
         const sql = "DELETE FROM images WHERE images.post = ?";
         db.run(sql, [id], (err) => {
             if (err) {
                 console.log(err);
                 return res.status(500).send("ERRO AO EXCLUIR");
-            }
-            return res.redirect("/posts");
+            }            
         });
     }
 
