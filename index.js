@@ -11,6 +11,8 @@ app.use(express.urlencoded({
 }));
 app.use(express.json());    
 
+const userRoutes = require('./src/routes/user-routes');
+app.use('/users', userRoutes);
 
 const postRoutes = require('./src/routes/post-routes');
 app.use('/posts', postRoutes);

@@ -8,6 +8,7 @@ const sequelize = new Sequelize({
 sequelize.authenticate()
   .then(() => {
     console.log('Connection has been established successfully.');
+    //sequelize.sync({ force: true });
   }).catch(error => {
     console.log('Unable to connect to the database:', error);
   });

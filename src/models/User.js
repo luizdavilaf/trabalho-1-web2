@@ -12,18 +12,18 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: false,
     unique:true,
+    validate: {isEmail: true},
   },
   password: DataTypes.STRING,
   cpf: {
     type: DataTypes.STRING,
     unique: true,    
   },
-  img_url: DataTypes.STRING,
-  created_at: DataTypes.INTEGER
-}, {
-  timestamps: false,
+  img_url: DataTypes.STRING,  
+}, {  
   modelName: 'users'
 });
+
 
 
 
