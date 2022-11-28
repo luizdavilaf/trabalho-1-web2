@@ -3,7 +3,7 @@ const sequelize = require("../database/sequelize-connection");
 
 
 
-const Post = sequelize.define('Post', {
+const Post = sequelize.define('post', {
   title: DataTypes.STRING,
   description: DataTypes.STRING,   
 }, {  

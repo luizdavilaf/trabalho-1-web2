@@ -1,30 +1,34 @@
 const { Router } = require('express');
 const PostController = require('../controllers/PostController');
 const router = Router();
+const AuthController = require('../controllers/AuthController');
+const isAuth = require('../middlewares/isAuth');
+const isAdmin = require('../middlewares/isAdmin');
+//const controller = new PostController();
 
-const controller = new PostController();
+router.get('/add-post', isAuth, PostController.renderAdd); //renderizar a pagina de adicionar post
 
-router.get('/add-post', (req, res) => controller.renderAdd(req, res)); //renderizar a pagina de adicionar post
+router.get('/edit/:id', PostController.getEdit); //consulta os dados para editar
 
-router.get('/edit/:id', (req, res) => controller.getEdit(req, res)); //consulta os dados para editar
+router.post('/edit/:id', PostController.editPost); //editar post
 
-router.post('/edit/:id', (req, res) => controller.editPost(req, res)); //editar post
+router.post('/eimage/edit-images/', PostController.editImages2); //editar imagens
 
-router.post('/eimage/edit-images/', (req, res) => controller.editImages2(req, res)); //editar imagens
+router.get('/', PostController.list); //lista os dados paginados
 
-router.get('/', (req, res) => controller.list(req, res)); //lista os dados paginados
+router.get('/:id', PostController.detail); //detalha um post por id
 
-router.get('/:id', (req, res) => controller.detail(req, res)); //detalha um post por id
+router.get('/delete/:id', PostController.deleteById); //deleta post
 
-router.get('/delete/:id', (req, res) => controller.delete(req, res)); //deleta post
+router.get('/user/:userId', PostController.getPostbyUserId); //deleta post
 
-router.post('/', (req, res) => controller.create(req, res)); // cria novo post
+router.post('/', isAuth, PostController.create); // cria novo post
 
 //images
-router.get('/add-post-image', (req, res) => controller.renderAddImage(req, res)); //renderiza pagina para adição de imagens
+router.get('/add-post-image', PostController.renderAddImage); //renderiza pagina para adição de imagens
 
-router.post('/image/:postid', (req, res) => controller.insertImages(req, res)); //adiciona imagens
+router.post('/image/:postid', PostController.insertImages); //adiciona imagens
 
-router.delete('/image/:postid', (req, res) => controller.deletePostImages(req, res)); //deleta imagens
+router.delete('/image/:postid', PostController.deletePostImages); //deleta imagens
 
 module.exports = router;

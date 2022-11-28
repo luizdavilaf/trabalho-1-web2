@@ -8,8 +8,9 @@ const { Image } = require('./Image');
 Post.belongsTo(User);
 User.hasMany(Post);
 
-Image.belongsTo(Post);
 Post.hasMany(Image);
+Image.belongsTo(Post);
+
 /*
 Post.hasMany(Commentary);
 Commentary.belongsTo(Post);

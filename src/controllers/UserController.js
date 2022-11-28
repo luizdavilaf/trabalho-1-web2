@@ -86,6 +86,24 @@ const detailByCpf = async (req, res) => {
 }
 
 
+const deleteByCpf = async (req, res) => {
+
+    const cpf = req.params;
+    await User.destroy({ where: cpf }).then((user) => {
+        res.status(200).send({ msg: "Usuário excluído!",user: user });
+        //return res.render('users-detail', { user });
+    })
+        .catch((err) => {
+            res.status(500).send({
+                msg: "Ocorreu um erro ao excluir o usuário... Tente novamente!",
+                err: "" + err
+            });
+        })
+
+
+}
+
+
 class UserController {
     constructor() {
         console.log('Iniciando o user controller');
@@ -97,28 +115,12 @@ class UserController {
 
     
 
-    /* delete(req, res) {
-        // users/delete/:id
-        const { id } = req.params;
-        const sql = 'DELETE FROM users WHERE users.id = ?';
-        db.run(sql, [id], (err) => {
-            if (err) {
-                console.log(err);
-                return res.status(500).send("ERRO AO EXCLUIR");
-            }
-            return res.redirect('/users');
-        })
-    }
-
-  
-
     
-        
-     */
 }
 
 module.exports = {
     UserController, 
+    deleteByCpf,
     create,
     listAll,
     detailByCpf

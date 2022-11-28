@@ -3,7 +3,7 @@ const sequelize = require("../database/sequelize-connection");
 
 
 
-const Image = sequelize.define('Image', {
+const Image = sequelize.define('image', {
   link: DataTypes.STRING,  
 }, {
   timestamps: false,
