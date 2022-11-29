@@ -2,8 +2,8 @@ const sequelize = require("../database/sequelize-connection");
 const { Post } = require('./Post');
 const { User } = require('./User');
 const { Image } = require('./Image');
-//const { Commentary } = require('./Commentary');
-//const { Inbox } = require('./InboxMsg');
+const { Comment } = require('./Comment');
+const { Like } = require('./Like');
 
 Post.belongsTo(User);
 User.hasMany(Post);
@@ -11,30 +11,17 @@ User.hasMany(Post);
 Post.hasMany(Image);
 Image.belongsTo(Post);
 
-/*
-Post.hasMany(Commentary);
-Commentary.belongsTo(Post);
+Post.hasMany(Comment);
+Comment.belongsTo(Post);
 
-Commentary.belongsTo(User);
-User.hasMany(Commentary);
+Comment.belongsTo(User);
+User.hasMany(Comment);
 
-Inbox.belongsTo(User, {
-    foreignKey: 'sender'
-});
-User.hasMany(Inbox, {
-    foreignKey: 'sender',
-    as: 'sent_msgs'
-});
+Post.hasMany(Like);
+Like.belongsTo(Post);
 
-Inbox.belongsTo(User, {
-    foreignKey: 'receiver'
-});
-User.hasMany(Inbox, {
-    foreignKey: 'receiver',
-    as: 'received_msgs'
-}); */
-
-
+Like.belongsTo(User);
+User.hasMany(Like);
 
 console.log('Sync Models');
 sequelize.sync();

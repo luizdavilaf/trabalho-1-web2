@@ -217,31 +217,20 @@ const list = (req, res) => {
 }
 
 const listHomePage = (req, res) => {
-    Post.findAll({
-        
+    Post.findAll({        
         include: [{
             model: Image,
             required: false,
             separate: true
         }, {
             model: User,
-            attributes: ['name'],
-            
-            
+            attributes: ['name'],            
         }],
         limit: 5,
         order: sequelize.literal('post.createdAt DESC')
-        
-             
-        
     }).then((posts) => {
         //console.log(posts)
         var lastFivePosts = posts
-        /* for (let i = 0; i < lastFivePosts.length; i++) {
-            lastFivePosts[i].createdAt = new Date(posts[i].createdAt).toDateString().toLocaleLowerCase()
-        } */
-        console.log(lastFivePosts)
-        
         res.render("home", { lastFivePosts });
     }).catch((err) => {
         res.send((err))
