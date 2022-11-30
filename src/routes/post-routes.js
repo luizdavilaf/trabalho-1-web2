@@ -8,7 +8,7 @@ const isAdmin = require('../middlewares/isAdmin');
 
 router.get('/add-post', isAuth, PostController.renderAdd); //renderizar a pagina de adicionar post
 
-router.get('/edit/:id', PostController.getEdit); //consulta os dados para editar
+router.get('/edit/:id', isAuth, PostController.getEdit); //consulta os dados para editar
 
 router.post('/edit/:id', PostController.editPost); //editar post
 

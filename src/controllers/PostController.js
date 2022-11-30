@@ -73,15 +73,13 @@ const create = (req, res) => {
 const insertImages = (req, res) => {
     var postid = parseInt(req.params.postid)
     var post = req.body.post
-    
+
 
     var errors = []
     var imagesInserted = []
 
     if (req.body.images != undefined) {
         const images = req.body.images
-
-
         images.forEach((image) => {
             var link = image.toString()
             if (link) {
@@ -89,13 +87,16 @@ const insertImages = (req, res) => {
                     .then((imageInsert) => {
                         imagesInserted.push(imageInsert)
                     })
+                    .catch((err) => {
+                        errors.push(err)
+                    })
             }
         })
         Promise.all([imagesInserted])
             .then(() => {
                 return res.redirect("/posts/" + postid);
             }).catch((error) => {
-                res.status(500).send(error);
+                res.status(500).send({ error: error, errors: errors });
             })
 
 
@@ -217,14 +218,14 @@ const list = (req, res) => {
 }
 
 const listHomePage = (req, res) => {
-    Post.findAll({        
+    Post.findAll({
         include: [{
             model: Image,
             required: false,
             separate: true
         }, {
             model: User,
-            attributes: ['name'],            
+            attributes: ['name'],
         }],
         limit: 5,
         order: sequelize.literal('post.createdAt DESC')
@@ -239,9 +240,9 @@ const listHomePage = (req, res) => {
 }
 
 const detail = async (req, res) => {
-    
+
     const id = req.params.id;
-   
+
     Post.findOne({
         where: { id },
         include: [{
@@ -251,46 +252,72 @@ const detail = async (req, res) => {
             model: User,
             attributes: ['name']
         }]
-    }).then((post)=>{        
+    }).then((post) => {
         res.status(200).render("post-detail", { post });
-    }).catch((err)=>{
+    }).catch((err) => {
         res.status(500).send({
             success: false,
-            err: ""+err
+            err: "" + err
         })
     })
-    
+
 }
 
 const getEdit = (req, res) => {
     const { id } = req.params;
-    db.get("SELECT * from post WHERE post.id = ? ", [id], (err, rows) => {
-        var post = rows;
-        console.log(post)
-        return res.render("post-edit", { post });
-    });
+    let user = undefined    
+    if (req.session.user){
+        user = req.session.user.id
+    }  
+    Post.findOne({ where: { id: id } })
+        .then((post) => {            
+            if (user!=undefined && post.userId==user){                
+                return res.render("post-edit", { post });        
+            }else{
+                res.status(400).send({ msg: "Este post não pode ser editado por você" });
+            }
+            
+        }).catch((err) => {
+            res.status(500).send({ error: ""+err });
+        })
 }
 
-
+/**
+ * Edita os atributos do post e busca as imagens do post para o usuário editar na proxima pagina
+ * @param {*} req 
+ * @param {*} res 
+ */
 const editPost = (req, res) => {
-    const { id } = req.params;
-    const { title, description, author } = req.body;
-    const params = [title, description, author, id];
-    db.run("UPDATE post SET title=? , description=?, author=? WHERE post.id = ? ", [params], (err, rows) => {
-        db.all("SELECT * from images where images.post = ?", [id], (err, rows) => {
-            var images = rows.slice(0);
-            for (let i = 0; i < 5; i++) {
-                if (!images[i]) {
-                    var image = {}
-                    image.link = ""
-                    image.id = 0
-                    images.push(image)
-                }
-            }
-            console.log(images)
-            return res.render("edit-img", { images });
+    const id = Number(req.params.id)
+    
+    let values = {
+        title: req.body.title || "Sem título",
+        description: req.body.description || "Sem conteúdo"
+    }
+    
+    Post.update(
+        values,
+        { where: { id: id } }
+    )
+        .then((update) => {
+            console.log(update)
+            Image.findAll({ where: { postId: id } })
+                .then((images) => {
+                    for (let i = 0; i < 5; i++) {
+                        if (!images[i]) {
+                            var image = {}
+                            image.link = ""
+                            image.id = 0
+                            images.push(image)
+                        }
+                    }
+                    return res.render("edit-img", { images });
+                }).catch((err) => {
+                    res.status(500).send({ error: err });
+                })
+        }).catch((err) => {
+            res.status(500).send({ error: err });
         })
-    });
 }
 
 const editImages2 = (req, res) => {
