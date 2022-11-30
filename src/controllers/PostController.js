@@ -3,9 +3,7 @@ const { User } = require('../models/User');
 const { Post } = require('../models/Post');
 const { Image } = require('../models/Image');
 const sequelize = require("../database/sequelize-connection");
-
-
-
+const { Sequelize } = require("sequelize");
 
 const renderAdd = (req, res) => {
     return res.render("post-insert");
@@ -107,17 +105,25 @@ const insertImages = (req, res) => {
 }
 
 const deleteById = (req, res) => {
-    // users/delete/:id
     const { id } = req.params;
-    const sql = "DELETE FROM post WHERE post.id = ?";
-    db.run(sql, [id], (err) => {
-        if (err) {
-            console.log(err);
-            return res.status(500).send("ERRO AO EXCLUIR");
-        }
-        deletePostImages(id)
-        return res.redirect("/posts");
-    });
+    let user = undefined
+    if (req.session.user) {
+        user = req.session.user.id
+    }
+    Post.findOne({ where: { id: id } })
+        .then((post) => {
+            if (user != undefined && post.userId == user) {
+                Post.destroy({ where: { id: id } })
+                    .then((result) => {
+                        res.status(200).send('<script>alert("Post Excluido!"); window.location.href = "/"; </script>');
+                    })
+            } else {
+                res.status(400).send('<script>alert("Post não pode ser excluído por você"); window.location.href = "/"; </script>');
+            }
+        }).catch((err) => {
+            console.log(err)
+            res.status(500).send('<script>alert("Ops! Ocorreu um erro ao excluir o post"); window.location.href = "/"; </script>');
+        })
 }
 
 const deleteImages = (req, res) => {
@@ -133,6 +139,8 @@ const deleteImages = (req, res) => {
 }
 
 const deletePostImages = (id) => {
+
+
     const sql = "DELETE FROM images WHERE images.post = ?";
     db.run(sql, [id], (err) => {
         if (err) {
@@ -141,7 +149,11 @@ const deletePostImages = (id) => {
         }
     });
 }
-
+/**
+ * Utilizada na versão sem ORM para incluir as imagens de um post no JSON
+ * @param {*} rows 
+ * @returns 
+ */
 const appendImages = (rows) => {
     var posts = rows.slice(0);
     var lastPostsPaginated = [];
@@ -166,6 +178,7 @@ const appendImages = (rows) => {
 
 const list = (req, res) => {
     var limit
+    var lastPostsPaginated = []
     var page
     if (req.query.limit != undefined && req.query.page != undefined) {
         var limit = parseInt(req.query.limit)
@@ -179,42 +192,65 @@ const list = (req, res) => {
     var previous = page - 1
     var next = page + 1
     if (req.query.title != undefined) {
-        var postTitle = req.query.title + "%"
+        var postTitle = "%" + req.query.title + "%"
     }
     var skip = -1
     if (page > 1) {
         skip = limit * (page - 1)
     }
-    db.get("SELECT  COUNT(*) FROM post", (err, count) => {
-        total = count["COUNT(*)"]
 
-        totalPages = parseInt(Math.ceil(total / limit))
-        const query = "WITH cinco_ultimos as (SELECT * FROM post ORDER BY datetime(post.created_at) DESC LIMIT ? OFFSET ?), imagem_dos_5 as (SELECT link,post, images.id as img_id FROM images LEFT JOIN cinco_ultimos on images.post= cinco_ultimos.id) SELECT * FROM cinco_ultimos LEFT JOIN imagem_dos_5 on imagem_dos_5.post= cinco_ultimos.id ORDER BY cinco_ultimos.id DESC"
-        if (postTitle != undefined) {
-            const query = "WITH cinco_ultimos as (SELECT * FROM post WHERE post.title LIKE ? ORDER BY datetime(post.created_at) DESC LIMIT ? OFFSET ?), imagem_dos_5 as (SELECT link,post, images.id as img_id FROM images LEFT JOIN cinco_ultimos on images.post= cinco_ultimos.id) SELECT * FROM cinco_ultimos LEFT JOIN imagem_dos_5 on imagem_dos_5.post= cinco_ultimos.id ORDER BY cinco_ultimos.id DESC"
-            db.all(query, [postTitle, limit, skip], (err, rows) => {
-                console.log(rows)
-                if (err) {
-                    console.error(err);
-                } else {
-                    var lastPostsPaginated = appendImages(rows)
-                    res.render("post-list", { lastPostsPaginated, page, limit, total, totalPages, previous, next });
-                }
+    if (postTitle != undefined) {
+        Post.findAndCountAll({
+            where: { title: { [Sequelize.Op.like]: postTitle } },
+            limit: limit,
+            offset: skip,
+            include: [{
+                model: Image,
+                required: false,
+                separate: true
+            }, {
+                model: User,
+                attributes: ['name'],
+            }],
+            order: sequelize.literal('post.createdAt DESC'),
+            subQuery: false,
+        })
+            .then((result) => {
+                lastPostsPaginated = result.rows
+                totalPages = parseInt(Math.ceil(result.count / limit))
+                res.render("post-list", { lastPostsPaginated, page, limit, total, totalPages, previous, next });
+            }).catch((err) => {
+                res.status(500).send({
+                    success: false,
+                    err: "" + err
+                })
             })
-        } else {
-            db.all(query, [limit, skip], (err, rows) => {
-                console.log(rows)
-                if (err) {
-                    console.error(err);
-                } else {
-                    var lastPostsPaginated = appendImages(rows)
-                    res.render("post-list", { lastPostsPaginated, page, limit, total, totalPages, previous, next });
-                }
+    } else {
+        Post.findAndCountAll({
+            limit: limit,
+            offset: skip,
+            include: [{
+                model: Image,
+                required: false,
+                separate: true
+            }, {
+                model: User,
+                attributes: ['name'],
+            }],
+            order: sequelize.literal('post.createdAt DESC'),
+            subQuery: false,
+        })
+            .then((result) => {
+                lastPostsPaginated = result.rows
+                totalPages = parseInt(Math.ceil(result.count / limit))
+                res.render("post-list", { lastPostsPaginated, page, limit, total, totalPages, previous, next });
+            }).catch((err) => {
+                res.status(500).send({
+                    success: false,
+                    err: "" + err
+                })
             })
-        }
-    })
-
-
+    }
 }
 
 const listHomePage = (req, res) => {
@@ -265,20 +301,20 @@ const detail = async (req, res) => {
 
 const getEdit = (req, res) => {
     const { id } = req.params;
-    let user = undefined    
-    if (req.session.user){
+    let user = undefined
+    if (req.session.user) {
         user = req.session.user.id
-    }  
+    }
     Post.findOne({ where: { id: id } })
-        .then((post) => {            
-            if (user!=undefined && post.userId==user){                
-                return res.render("post-edit", { post });        
-            }else{
+        .then((post) => {
+            if (user != undefined && post.userId == user) {
+                return res.render("post-edit", { post });
+            } else {
                 res.status(400).send({ msg: "Este post não pode ser editado por você" });
             }
-            
+
         }).catch((err) => {
-            res.status(500).send({ error: ""+err });
+            res.status(500).send({ error: "" + err });
         })
 }
 
@@ -289,12 +325,12 @@ const getEdit = (req, res) => {
  */
 const editPost = (req, res) => {
     const id = Number(req.params.id)
-    
+
     let values = {
         title: req.body.title || "Sem título",
         description: req.body.description || "Sem conteúdo"
     }
-    
+
     Post.update(
         values,
         { where: { id: id } }
@@ -320,37 +356,40 @@ const editPost = (req, res) => {
         })
 }
 
+/**
+ * edita as imagens de um post
+ * @param {Array} req.body.images 
+ * @param {*} res 
+ * @returns 
+ */
 const editImages2 = (req, res) => {
     var postid
-    const sql = "UPDATE images SET link=? WHERE images.id = ? ";
-
     if (req.body.images != undefined) {
         var images = req.body.images
         if (images[0].post) {
             postid = images[0].post
         }
-        console.log(images[0])
+        
         try {
             for (let i = 0; i < images.length; i++) {
                 var imgLink = images[i].link
-                var id = images[i].id
-                const params = [imgLink, id];
+                const id = images[i].id
+                const params = { link: imgLink }
                 if (imgLink && id != 0) {
-                    db.run(sql, params, function (err) {
-                        if (err) {
-                            console.log(err);
-                            throw new Error(err);
-                        }
-                    });
+                    Image.update(params,
+                        {
+                            where: { id: id }
+                        }).then().catch((err) => {
+                            throw new Error(err)
+                        })
                 }
                 if (imgLink != "" && id == 0) {
-
-                    db.run("INSERT INTO images (post, link) VALUES (?, ?)", [postid, imgLink], function (err) {
-                        if (err) {
-                            console.log(err);
-                            throw new Error(err);
-                        }
-                    });
+                    Image.create({
+                        postId: postid,
+                        link: imgLink
+                    }).then().catch((err) => {
+                        throw new Error(err)
+                    })
                 }
             }
         } catch (error) {
@@ -366,14 +405,8 @@ const editImages2 = (req, res) => {
     }
 }
 
-const getPostbyUserId = (req, res) => {
-    var userId = req.params.userId
 
-
-}
-
-module.exports = {
-    getPostbyUserId,
+module.exports = {    
     renderAdd,
     getIndexOfPost,
     renderAddImage,

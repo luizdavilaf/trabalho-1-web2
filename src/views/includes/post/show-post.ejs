@@ -3,7 +3,7 @@
     <h2><%= post.title %></h2> 
     <br>
     Data: <%= post.createdAt %>
-    <p></p>
+    <p>por <%= post.user.name %></p>
        <br>
     <hr width="30%" align="LEFT">
     
@@ -15,8 +15,8 @@
     </div>
   
   <div class="post-image-container">    
-     <% if (post.images[0]!=undefined) {%>
-     <img src="<%=post.images[0]%>" width="200" height="200" class="post-image1"> 
+     <% if (post.images) {%>
+     <img src="<%=post.images[0].link%>" width="200" height="200" class="post-image1"> 
      <% } %>
    </div> 
 </a>

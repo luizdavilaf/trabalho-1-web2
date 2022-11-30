@@ -18,9 +18,7 @@ router.get('/', PostController.list); //lista os dados paginados
 
 router.get('/:id', PostController.detail); //detalha um post por id
 
-router.get('/delete/:id', PostController.deleteById); //deleta post
-
-router.get('/user/:userId', PostController.getPostbyUserId); //deleta post
+router.get('/delete/:id', isAuth, PostController.deleteById); //deleta post
 
 router.post('/', isAuth, PostController.create); // cria novo post
 

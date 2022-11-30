@@ -13,12 +13,15 @@
 
       <main>
         <div class="mainContainer">
-        <h1>PRINCIPAL</h1>
+        <h1>Ultimos 5 posts do Blog</h1>
         <h2>Luiz Sebastião D Avila Filho</h2>
         <ul>
-          <ul class="post-list">
-            <% for (let i = 0; i < lastFivePosts.length; i++) { %> <%-
-            include('./includes/post/show', { post: lastFivePosts[i] })%> <% } %>
+          <ul class="post-list"> 
+            <script></script>
+            <%  if( typeof alert !== 'undefined')   { %> <script>window.alert("<% msg %>")</script> <% } %>
+            <%if( typeof lastFivePosts !== 'undefined') { %>
+            <% for (let i = 0; i < lastFivePosts.length; i++) { %> <%-include('./includes/post/show', { post: lastFivePosts[i] })%> <% } }%>
+            
           </ul>
         </ul>
         </div>
