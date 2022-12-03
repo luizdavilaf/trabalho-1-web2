@@ -6,26 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Inicio</title>
     <link rel="stylesheet" href="/css/main.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   </head>
   <body>
-    <div class="container">
-      <%- include('./includes/navbar') %>
-
+    <div class="box">
+      <%- include('./includes/header') %>
       <main>
-        <div class="mainContainer">
-        <h1>Ultimos 5 posts do Blog</h1>
-        <h2>Luiz Sebastião D Avila Filho</h2>
-        <ul>
-          <ul class="post-list"> 
-            <script></script>
-            <%  if( typeof alert !== 'undefined')   { %> <script>window.alert("<% msg %>")</script> <% } %>
-            <%if( typeof lastFivePosts !== 'undefined') { %>
-            <% for (let i = 0; i < lastFivePosts.length; i++) { %> <%-include('./includes/post/show', { post: lastFivePosts[i] })%> <% } }%>
-            
-          </ul>
-        </ul>
+        <div class="container">
+          <%- include('./includes/navbar', { user}) %>
+          <div class="mainContainer">
+            <h1>Ultimos 5 posts do Blog</h1>
+            <ul class="post-list">
+              <%if( typeof lastFivePosts !== 'undefined' &&
+              lastFivePosts.length>0) { %> <% for (let i = 0; i <
+              lastFivePosts.length; i++) { %> <%-include('./includes/post/show',
+              { post: lastFivePosts[i] })%> <% } }else{%>
+              <p>Opa! Ainda não temos nada postado...</p>
+              <%}%>
+            </ul>
+          </div>
         </div>
       </main>
+      <%- include('./includes/footer') %>
     </div>
   </body>
 </html>

@@ -213,7 +213,7 @@ const list = (req, res) => {
                 attributes: ['name'],
             }],
             order: sequelize.literal('post.createdAt DESC'),
-            subQuery: false,
+            /* subQuery: false, */
         })
             .then((result) => {
                 lastPostsPaginated = result.rows
@@ -254,6 +254,7 @@ const list = (req, res) => {
 }
 
 const listHomePage = (req, res) => {
+       
     Post.findAll({
         include: [{
             model: Image,
@@ -266,12 +267,13 @@ const listHomePage = (req, res) => {
         limit: 5,
         order: sequelize.literal('post.createdAt DESC')
     }).then((posts) => {
-        //console.log(posts)
+       
         var lastFivePosts = posts
-        res.render("home", { lastFivePosts });
+        res.render('home', { lastFivePosts, user: req.session.user });
     }).catch((err) => {
         res.send((err))
     })
+    
 
 }
 
@@ -289,7 +291,7 @@ const detail = async (req, res) => {
             attributes: ['name']
         }]
     }).then((post) => {
-        res.status(200).render("post-detail", { post });
+        res.status(200).render("post-detail", { post, user: req.session.user });
     }).catch((err) => {
         res.status(500).send({
             success: false,

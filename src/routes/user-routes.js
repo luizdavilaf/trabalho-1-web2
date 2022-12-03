@@ -12,6 +12,8 @@ router.get('/login', AuthController.renderLogin);
 
 router.post('/', UserController.create);
 
+router.get('/', UserController.renderAdd);
+
 router.get('/list', UserController.listAll);
 
 router.get('/:cpf', UserController.detailByCpf);

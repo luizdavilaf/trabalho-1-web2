@@ -7,6 +7,11 @@ const verifyPassordLength = (password) =>{
     }
 }
 
+const renderAdd = (req, res) => {
+    return res.render("user-sign");
+}
+
+
 const create = async (req, res) => {
     var userObj = {}
     if (req.body.name != undefined) {
@@ -25,29 +30,29 @@ const create = async (req, res) => {
                         }
                     }
                 } else {
-                    res.status(400).send("O campo senha não pode ser vazio!");
+                    throw new Error("O campo senha não pode ser vazio!")
                 }
             } else {
-                res.status(400).send("O campo cpf não pode ser vazio!");
+                throw new Error("O campo cpf não pode ser vazio!");
             }
         } else {
-            res.status(400).send("O campo email não pode ser vazio!");
+            throw new Error("O campo email não pode ser vazio!");
         }
     } else {
-        res.status(400).send("O campo nome não pode ser vazio!");
+        throw new Error("O campo nome não pode ser vazio!");
     }
     await User.create(userObj)
         .then((user) => {
-            res.status(200).send({ status: "Usuário criado...", data: user });
+            res.status(200).send('<script>alert("Usuário criado!"); window.location.href = "/"; </script>');
         })
         .catch((err) => {
             if (err.errors[0].message.includes("must be unique")){
                 err.mensagem = err.errors[0].message.replace("must be unique", "já existente")                
             }else{
-                err.mensagem = ""
+                err.mensagem = err.message
             }
-            res.status(500).send({ msg: "Ocorreu um erro na criação do usuário... Tente novamente!", 
-            err: "" + err.mensagem });
+            res.status(400).send('<script>alert("Ocorreu um erro na criação do usuário"); window.location.href = "/users"; </script>')
+            
         })
 }
 
@@ -120,6 +125,7 @@ class UserController {
 
 module.exports = {
     UserController, 
+    renderAdd,
     deleteByCpf,
     create,
     listAll,

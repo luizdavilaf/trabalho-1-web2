@@ -1,14 +1,15 @@
-<a href="/posts/<%= post.id %>"  class="post-card">
-  <div id="child">
-    Titulo: <%= post.title %>
-    <br>
-    Data: 
-    <script type="text/javascript">
-document.write(
-  new Date("<%= post.createdAt.toISOString() %>").toLocaleDateString()
-);
-</script>
-    <br>
+<li>
+  <a href="/posts/<%= post.id %>" class="post-card">
+    <div id="child">
+      Titulo: <%= post.title %>
+      <br />
+      Data:
+      <script type="text/javascript">
+        document.write(
+          new Date("<%= post.createdAt.toISOString() %>").toLocaleDateString()
+        );
+      </script>
+      <br />
     </div>
-   
-</a>
+  </a>
+</li>

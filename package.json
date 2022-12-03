@@ -20,5 +20,9 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.19"
+  },
+  "nodemonConfig": {
+    "ext": "js,json,hbs,html,ejs"
+    
   }
 }

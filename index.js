@@ -2,10 +2,19 @@ const express = require('express');
 const app = express();
 const session = require('express-session');
 const sync = require('./src/models/sync')
+const logger = require('./src/middlewares/logger');
 
 
 
 app.use(express.static('public'));
+
+app.use(session({
+    secret: 'SEGREDO DA APLICACAO, SE VAZAR DA RUIM',
+    resave: false,
+    saveUninitialized: true,
+    //cookie: { secure: true } 
+}));
+app.use(logger);
 app.set('view engine', 'ejs');  
 app.set('views', 'src/views');  
 app.use(express.urlencoded({
@@ -13,12 +22,7 @@ app.use(express.urlencoded({
 }));
 
 app.use(express.json());
-app.use(session({
-    secret: 'SEGREDO DA APLICACAO, SE VAZAR DA RUIM',
-    resave: false,
-    saveUninitialized: true,
-    // cookie: { secure: true } - FOR PRODUCTION
-}));
+
 
 
 const userRoutes = require('./src/routes/user-routes');
