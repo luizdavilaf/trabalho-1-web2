@@ -288,7 +288,7 @@ const detail = async (req, res) => {
             required: false,
         }, {
             model: User,
-            attributes: ['name']
+            attributes: ['name', 'id']
         }]
     }).then((post) => {
         res.status(200).render("post-detail", { post, user: req.session.user });

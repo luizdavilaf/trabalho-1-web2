@@ -1,11 +1,12 @@
 const db = require('../database/dbconnection');
 const { User } = require('../models/User');
+const sequelize = require("../database/sequelize-connection");
+const { Image } = require('../models/Image');
+const { Like } = require('../models/Like');
+const { Comment } = require('../models/Comment');
+const { Sequelize } = require("sequelize");
+const { Post } = require('../models/Post');
 
-const verifyPassordLength = (password) =>{
-    if(password.length<6){
-        throw new Error("O campo senha deve ter pelo menos 6 caracteres!")        
-    }
-}
 
 const renderAdd = (req, res) => {
     return res.render("user-sign");
@@ -46,13 +47,13 @@ const create = async (req, res) => {
             res.status(200).send('<script>alert("Usuário criado!"); window.location.href = "/"; </script>');
         })
         .catch((err) => {
-            if (err.errors[0].message.includes("must be unique")){
-                err.mensagem = err.errors[0].message.replace("must be unique", "já existente")                
-            }else{
+            if (err.errors[0].message.includes("must be unique")) {
+                err.mensagem = err.errors[0].message.replace("must be unique", "já existente")
+            } else {
                 err.mensagem = err.message
             }
             res.status(400).send('<script>alert("Ocorreu um erro na criação do usuário"); window.location.href = "/users"; </script>')
-            
+
         })
 }
 
@@ -61,31 +62,51 @@ const listAll = async (req, res) => {
         attributes: {
             exclude: ['password', 'created_at']
         }
-    }).then((users)=>{
+    }).then((users) => {
         //res.render('users-list', { users: users })
         res.status(200).send({ users: users });
-    }) 
-    .catch((err)=>{
-        res.status(500).send({
-            msg: "Ocorreu um erro ao buscar usuários... Tente novamente!",
-            err: "" + err
-        });        
-    })      
+    })
+        .catch((err) => {
+            res.status(500).send({
+                msg: "Ocorreu um erro ao buscar usuários... Tente novamente!",
+                err: "" + err
+            });
+        })
 }
 
-const detailByCpf = async (req, res) => {
-    
-    const  cpf  = req.params;
-    await User.findOne({where:  cpf }).then((user) => {
-        res.status(200).send({ user: user });
-        //return res.render('users-detail', { user });
-    })
+const detailByUsername = async (req, res) => {
+    var order = ['post.createdAt', 'DESC']
+    if (req.query.order != undefined) {
+        order = ['likes.likeCount', 'DESC']
+    }
+    const name = req.params.username;
+
+    await User.findOne({ where: { name: { [Sequelize.Op.like]: name } } })
+        .then((user) => {
+            Post.findAll({                
+                where: { userId: user.id },                                
+                include:  {
+                    model: Like,
+                    attributes: [[sequelize.fn('COUNT', sequelize.col('postId')), 'likeCount']],
+                    required: false,
+                    separate: true,
+                }        
+                ,   
+                //order: order,             
+            })
+                .then((posts) => {
+                    res.status(200).send({
+                        posts: posts
+                    });
+                })
+            //return res.render('users-detail', { user });
+        })
         .catch((err) => {
             res.status(500).send({
                 msg: "Ocorreu um erro ao buscar o usuário... Tente novamente!",
                 err: "" + err
             });
-        })   
+        })
 
 
 }
@@ -95,7 +116,7 @@ const deleteByCpf = async (req, res) => {
 
     const cpf = req.params;
     await User.destroy({ where: cpf }).then((user) => {
-        res.status(200).send({ msg: "Usuário excluído!",user: user });
+        res.status(200).send({ msg: "Usuário excluído!", user: user });
         //return res.render('users-detail', { user });
     })
         .catch((err) => {
@@ -118,16 +139,16 @@ class UserController {
         return res.render('users-insert');
     } */
 
-    
 
-    
+
+
 }
 
 module.exports = {
-    UserController, 
+    UserController,
     renderAdd,
     deleteByCpf,
     create,
     listAll,
-    detailByCpf
+    detailByUsername
 };

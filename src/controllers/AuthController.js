@@ -19,7 +19,7 @@ const login = async (req, res) => {
                 return res.status(400).send('<script>alert("Senha Invalida!"); window.location.href = "/users/login"; </script>');
 
             } else {
-                req.session.user = user1.dataValues
+                req.session.user = { id: user1.dataValues.id, name: user1.dataValues.name, email: user1.dataValues.email }
                
                 //res.status(200).send({ msg: "logado..." });
                 //res.send('<script>alert("Logado..."); window.location.href = "/"; </script>')

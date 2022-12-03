@@ -31,12 +31,12 @@
         <hr width="30%" align="LEFT">
        
         <br>
-        <% if() %>
+        <% if(locals.user && user.id==post.user.id){ %>
         <button onclick="apagaPost()" type="button" class="btn btn-danger">Excluir</button>
         
         <button onclick="location.href= '/posts/edit/<%=post.id%>'" type="button" class="btn btn-warning">Editar</button>
 
-        
+        <%}%>
     
         <br>
         <br>

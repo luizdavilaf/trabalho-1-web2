@@ -16,7 +16,7 @@ router.get('/', UserController.renderAdd);
 
 router.get('/list', UserController.listAll);
 
-router.get('/:cpf', UserController.detailByCpf);
+router.get('/:username', UserController.detailByUsername);
 
 router.delete('/:cpf', UserController.deleteByCpf);
 
