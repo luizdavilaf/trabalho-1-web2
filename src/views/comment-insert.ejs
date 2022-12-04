@@ -27,7 +27,21 @@
     <main>
         <div class="mainContainer">
             <h1>Cadastrar novo comentário</h1>
-            
+          
+             
+            <div class="form">             
+                  
+                    <form action="/posts/comment/<%=postId%> " method="post">     
+                        <label for="description">Conteúdo do Comentário:</label> 
+    
+                                  
+                    <input type="text" name="title" > 
+                    <br>    
+                    <label for="description">Texto do post:</label> 
+                    <br>   
+                    <textarea name="description" required>  
+                    </textarea> 
+        
             </div>
         </div>
     </main>
