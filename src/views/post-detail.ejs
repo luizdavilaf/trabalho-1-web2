@@ -23,36 +23,36 @@
     <%- include('./includes/navbar') %>
     <main>
         <div class="mainContainer">
-        <h5><%= post.created_at %> </h5>   
+        <h5>Data:  <%=  new Date(post.createdAt).toLocaleDateString() %> </h5>   
         <h1><%= post.title %></h1>
-        <h4>por <%= post.user.name %></h4>
-        <p></p>
+        <h4>por <%= post.user.name %></h4>        
         <br>
-        <hr width="30%" align="LEFT">
-       
+        <hr width="30%" align="LEFT">       
         <br>
         <% if(locals.user && user.id==post.user.id){ %>
-        <button onclick="apagaPost()" type="button" class="btn btn-danger">Excluir</button>
-        
+        <button onclick="apagaPost()" type="button" class="btn btn-danger">Excluir</button>        
         <button onclick="location.href= '/posts/edit/<%=post.id%>'" type="button" class="btn btn-warning">Editar</button>
-
-        <%}%>
-    
+        <%}%>    
         <br>
-        <br>
-        
+        <br>        
         <div class="Postcontainer">    
             <div class="containerText">
                 <%= post.description %>
             </div>  
-        <br>    
-            
+            <br>                
             <div class="images-container"> 
-                <% for (let i = 0; i < post.images.length; i++) { %> 
-                    
+                <% for (let i = 0; i < post.images.length; i++) { %>                     
                 <img src=<%=post.images[i].link%> width="300" height="300" >
                 <% } %>
             </div>
+            <br>
+            <hr width="80%" align="LEFT">
+            <br>
+            <div class="comments">
+                <h3>Comentários:</h3>
+                <a href="/posts/comment<%= post.id %>"> <h2>Comentar</h2> </a>
+            </div>
+
         </div>
     </div>
     </main>

@@ -29,4 +29,8 @@ router.post('/image/:postid', PostController.insertImages); //adiciona imagens
 
 router.delete('/image/:postid', PostController.deletePostImages); //deleta imagens
 
+router.post('/comment/:postid', isAuth, PostController.insertComments); //adiciona comentario
+
+router.get('/comment/:postid', isAuth, PostController.renderComment); //adiciona comentario
+
 module.exports = router;

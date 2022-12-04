@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inserir</title>
+    <title>Inserir Comentário</title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
@@ -14,18 +14,19 @@
     <div class="container">
     
     <%- include('./includes/navbar') %>
+     <script>
     
+    var url = new URL(window.location.href)
+    console.log({url})
+    var postId = url.pathname
+    
+    </script>
     <main>
         <div class="mainContainer">
-            <h1>Cadastrar novo post</h1>
+            <h1>Cadastrar novo comentário</h1>
             <div class="form">            
-                <form action="/posts/" method="post">
-                    <label for="title">Título do post:</label>
-                    <input type="text" name="title" required>
-                    <br>                
-                    <br>
-                                   
-                    <label for="description">Texto do post:</label>
+                <form action="/posts/comment/<%=postId%> " method="post">    
+                    <label for="description">Conteúdo do Comentário:</label>
                     <br>  
                     <textarea name="description" required> 
                     </textarea>

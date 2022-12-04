@@ -92,7 +92,7 @@ input {
 
 
 .images-container {
-    display: flexbox;
+    display: flex;
     width: 80%;
 }
 

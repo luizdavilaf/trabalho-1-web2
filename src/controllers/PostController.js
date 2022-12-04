@@ -2,6 +2,8 @@ const db = require("../database/dbconnection");
 const { User } = require('../models/User');
 const { Post } = require('../models/Post');
 const { Image } = require('../models/Image');
+const { Comment } = require('../models/Comment');
+const { Like } = require('../models/Like');
 const sequelize = require("../database/sequelize-connection");
 const { Sequelize } = require("sequelize");
 
@@ -203,7 +205,7 @@ const list = (req, res) => {
         Post.findAndCountAll({
             where: { title: { [Sequelize.Op.like]: postTitle } },
             limit: limit,
-            offset: skip,            
+            offset: skip,
             include: [{
                 model: Image,
                 required: false,
@@ -228,7 +230,7 @@ const list = (req, res) => {
     } else {
         Post.findAndCountAll({
             limit: limit,
-            offset: skip,            
+            offset: skip,
             include: [{
                 model: Image,
                 required: false,
@@ -241,7 +243,7 @@ const list = (req, res) => {
             subQuery: false,
         })
             .then((result) => {
-               
+
                 lastPostsPaginated = result.rows
                 //console.log(lastPostsPaginated)
                 totalPages = parseInt(Math.ceil(result.count / limit))
@@ -256,7 +258,7 @@ const list = (req, res) => {
 }
 
 const listHomePage = (req, res) => {
-       
+
     Post.findAll({
         include: [{
             model: Image,
@@ -269,18 +271,18 @@ const listHomePage = (req, res) => {
         limit: 5,
         order: sequelize.literal('post.createdAt DESC')
     }).then((posts) => {
-       
+
         var lastFivePosts = posts
         res.render('home', { lastFivePosts, user: req.session.user });
     }).catch((err) => {
         res.send((err))
     })
-    
+
 
 }
 
 const detail = async (req, res) => {
-
+    const userId = req.session.user.id || undefined
     const id = req.params.id;
 
     Post.findOne({
@@ -291,9 +293,18 @@ const detail = async (req, res) => {
         }, {
             model: User,
             attributes: ['name', 'id']
+        },
+        {
+            model: Comment,
+            required: false,
         }]
     }).then((post) => {
-        res.status(200).render("post-detail", { post, user: req.session.user });
+        if (post.userId == userId) {
+            res.status(200).render("post-detail", { post, user: req.session.user });
+        } else {
+            console.log(post)
+        }
+
     }).catch((err) => {
         res.status(500).send({
             success: false,
@@ -375,7 +386,7 @@ const editImages2 = (req, res) => {
         if (images[0].postId) {
             postid = images[0].postId
         }
-        
+
         try {
             for (let i = 0; i < images.length; i++) {
                 var imgLink = images[i].link
@@ -412,8 +423,33 @@ const editImages2 = (req, res) => {
     }
 }
 
+const insertComments = (req, res) => {
 
-module.exports = {    
+    var values = {
+        userId: req.session.user.id,
+        postId: req.params.postid
+    }
+    if (req.body.description != undefined) {
+        values.description = req.body.description
+    } else {
+        throw new Error("Campo conteúdo do comentário não pode ser vazio!")
+    }
+    Comment.create(
+        values
+    ).then((comment)=>{
+        res.send({ comment })
+    })
+
+}
+
+
+const renderComment = (req, res) => {
+    return res.render("post-insert");
+}
+
+module.exports = {
+    renderComment,
+    insertComments,
     renderAdd,
     getIndexOfPost,
     renderAddImage,
