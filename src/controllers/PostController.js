@@ -282,7 +282,11 @@ const listHomePage = (req, res) => {
 }
 
 const detail = async (req, res) => {
-    const userId = req.session.user.id || undefined
+    var userId = undefined
+    if (req.session.user!=undefined){
+        userId = req.session.user.id
+    }
+    
     const id = req.params.id;
 
     Post.findOne({
@@ -302,7 +306,7 @@ const detail = async (req, res) => {
         if (post.userId == userId) {
             res.status(200).render("post-detail", { post, user: req.session.user });
         } else {
-            console.log(post)
+            res.status(200).render("post-detail", { post, user: req.session.user });
         }
 
     }).catch((err) => {
