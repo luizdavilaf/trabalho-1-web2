@@ -28,6 +28,7 @@
                     <label for="description">Texto do post:</label>
                     <br>  
                     <textarea name="description"> 
+                        <%post.description = post.description.trim()%>
                         <%= post.description %>
                     </textarea>
                     

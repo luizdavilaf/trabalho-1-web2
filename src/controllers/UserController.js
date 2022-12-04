@@ -75,35 +75,57 @@ const listAll = async (req, res) => {
 }
 
 const detailByUsername = async (req, res) => {
-    var order = ['post.createdAt', 'DESC']
+    var order = 'post.createdAt DESC'
     if (req.query.order != undefined) {
-        order = ['likes.likeCount', 'DESC']
+        order = 'likeCount DESC'
     }
     const name = req.params.username;
 
-    await User.findOne({ where: { name: { [Sequelize.Op.like]: name } } })
+    await User.findOne({
+        where: {
+            name: { [Sequelize.Op.like]: name }
+        },
+        raw: true,
+        attributes: ['id', 'name']
+    })
         .then((user) => {
-            Post.findAll({                
-                where: { userId: user.id },                                
-                include:  {
-                    model: Like,
-                    attributes: [[sequelize.fn('COUNT', sequelize.col('postId')), 'likeCount']],
-                    required: false,
-                    separate: true,
-                }        
-                ,   
-                //order: order,             
+            Post.findAll({
+                subQuery: false,
+                raw: true,
+                nest: true,
+                where: { userId: user.id },
+                attributes: {
+                    include: [[sequelize.fn('COUNT', sequelize.col('likes.postId')), 'likeCount']]
+                },
+                include: [
+                    {
+                        model: User,
+                        attributes: ['name', 'id'],                        
+                    },
+                    {
+                        model: Like,
+                        attributes: [],
+                        duplicate: false,
+                    },
+                    {
+                        model: Image,
+                        
+                    }
+                    ],
+                group: 'post.id',
+                order: sequelize.literal(order),
             })
                 .then((posts) => {
-                    res.status(200).send({
-                        posts: posts
+                    //console.log(posts)
+                    res.render('user-detail', {
+                        posts: posts,
+                        user: { id: user.id, name: user.name }
                     });
                 })
-            //return res.render('users-detail', { user });
         })
         .catch((err) => {
             res.status(500).send({
-                msg: "Ocorreu um erro ao buscar o usuário... Tente novamente!",
+                msg: "Ocorreu um erro ao buscar o usuário...",
                 err: "" + err
             });
         })

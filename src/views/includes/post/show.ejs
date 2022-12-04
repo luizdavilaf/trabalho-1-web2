@@ -3,12 +3,7 @@
     <div id="child">
       Titulo: <%= post.title %>
       <br />
-      Data:
-      <script type="text/javascript">
-        document.write(
-          new Date("<%= post.createdAt.toISOString() %>").toLocaleDateString()
-        );
-      </script>
+      Data:<%= new Date( post.createdAt).toLocaleDateString() %>
       <br />
     </div>
   </a>

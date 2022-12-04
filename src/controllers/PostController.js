@@ -35,13 +35,13 @@ const create = (req, res) => {
     const now = new Date().toISOString();
 
     if (req.body.title != undefined) {
-        title = req.body.title;
+        title = req.body.title.trim();
     } else {
         return res.status(500).send("Não pode publicar post sem título!");
     }
 
     if (req.body.description != undefined) {
-        description = req.body.description;
+        description = req.body.description.trim();
     } else {
         return res.status(500).send("Não pode publicar post sem texto!");
     }
@@ -57,7 +57,7 @@ const create = (req, res) => {
             description: description
         }
     ).then((post) => {
-        console.log(post)
+        //console.log(post)
         const postid = post.id
         res.render("insert-post-img", { postid, post });
     }).catch((error) => {
@@ -203,7 +203,7 @@ const list = (req, res) => {
         Post.findAndCountAll({
             where: { title: { [Sequelize.Op.like]: postTitle } },
             limit: limit,
-            offset: skip,
+            offset: skip,            
             include: [{
                 model: Image,
                 required: false,
@@ -228,7 +228,7 @@ const list = (req, res) => {
     } else {
         Post.findAndCountAll({
             limit: limit,
-            offset: skip,
+            offset: skip,            
             include: [{
                 model: Image,
                 required: false,
@@ -241,7 +241,9 @@ const list = (req, res) => {
             subQuery: false,
         })
             .then((result) => {
+               
                 lastPostsPaginated = result.rows
+                //console.log(lastPostsPaginated)
                 totalPages = parseInt(Math.ceil(result.count / limit))
                 res.render("post-list", { lastPostsPaginated, page, limit, total, totalPages, previous, next });
             }).catch((err) => {
@@ -330,7 +332,7 @@ const editPost = (req, res) => {
 
     let values = {
         title: req.body.title || "Sem título",
-        description: req.body.description || "Sem conteúdo"
+        description: req.body.description.trim() || "Sem conteúdo"
     }
 
     Post.update(
@@ -338,17 +340,19 @@ const editPost = (req, res) => {
         { where: { id: id } }
     )
         .then((update) => {
-            console.log(update)
+            //console.log(update)
             Image.findAll({ where: { postId: id } })
                 .then((images) => {
                     for (let i = 0; i < 5; i++) {
                         if (!images[i]) {
                             var image = {}
+                            image.postId = id
                             image.link = ""
                             image.id = 0
                             images.push(image)
                         }
                     }
+                    //console.log(images)
                     return res.render("edit-img", { images });
                 }).catch((err) => {
                     res.status(500).send({ error: err });
@@ -368,8 +372,8 @@ const editImages2 = (req, res) => {
     var postid
     if (req.body.images != undefined) {
         var images = req.body.images
-        if (images[0].post) {
-            postid = images[0].post
+        if (images[0].postId) {
+            postid = images[0].postId
         }
         
         try {
@@ -385,7 +389,8 @@ const editImages2 = (req, res) => {
                             throw new Error(err)
                         })
                 }
-                if (imgLink != "" && id == 0) {
+                if (imgLink && id == 0) {
+                    //console.log(postid)
                     Image.create({
                         postId: postid,
                         link: imgLink

@@ -1,22 +1,35 @@
-<a href="/posts/<%= post.id %>"  class="post-card-with-image">
- 
-    <h2><%= post.title %></h2> 
-    <br>
-    Data: <%= post.createdAt %>
-    <p>por <%= post.user.name %></p>
-       <br>
-    <hr width="30%" align="LEFT">
-    
-    <br>
-    <br>
-    
-    <div class="text-container">
-    <%= post.description %>
-    </div>
-  
-  <div class="post-image-container">    
-     <% if (post.images) {%>
-     <img src="<%=post.images[0].link%>" width="200" height="200" class="post-image1"> 
-     <% } %>
-   </div> 
-</a>
+<div class="post-card-with-image">
+  <a href="/posts/<%= post.id %>"> <h2><%= post.title %></h2> </a>
+  <br >
+  Data: <%= post.createdAt %>
+  <p>por <%= post.user.name %></p>
+  <br >
+  <hr width="30%" align="LEFT" />
+
+  <br >
+  <br >
+
+  <div class="text-container"><%= post.description %></div>
+
+  <div class="post-image-container">
+      
+     <%if (post.images) {%> <% if (post.images.length>=1) {%>      
+    <img
+      src="<%=post.images[0].link%>"
+      width="200"
+      height="200"
+      class="post-image1"
+    >
+    <% }else{%>
+       
+       <img
+      src="<%=post.images.link%>"
+      width="200"
+      height="200"
+      class="post-image1"
+    >
+      <% }} %>
+  </div>
+
+  <% if (post.likeCount!=undefined) {%> Likes:<%-post.likeCount%> <% } %>
+</div>
