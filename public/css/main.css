@@ -49,6 +49,9 @@ textarea {
     background-color: rgb(81, 85, 126)
 }
 
+td {
+    text-align: center;
+}
 
 input {
     width: 100%;
