@@ -448,7 +448,7 @@ const insertComments = (req, res) => {
 
 
 const renderComment = (req, res) => {
-    return res.render("post-insert");
+    return res.render("comment-insert");
 }
 
 module.exports = {

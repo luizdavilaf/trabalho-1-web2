@@ -14,19 +14,16 @@
     <div class="container">
     
     <%- include('./includes/navbar') %>
-     <script>
     
-    var url = new URL(window.location.href)
-    console.log({url})
-    var postId = url.pathname
-    
-    </script>
     <main>
         <div class="mainContainer">
-            <h1>Cadastrar novo comentário</h1>
+            <h1>Cadastrar novo Post</h1>
             <div class="form">            
-                <form action="/posts/comment/<%=postId%> " method="post">    
-                    <label for="description">Conteúdo do Comentário:</label>
+                <form action="/posts/" method="post">   
+                    <label for="title">Título do post:</label>                    
+                    <input type="text" name="title" >
+                    <br>   
+                    <label for="description">Texto do post:</label>
                     <br>  
                     <textarea name="description" required> 
                     </textarea>
