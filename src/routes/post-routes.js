@@ -33,4 +33,6 @@ router.post('/comment/:postid', isAuth, PostController.insertComments); //adicio
 
 router.get('/comment/:postid', isAuth, PostController.renderComment); //adiciona comentario
 
+router.get('/comment/hide/:commentid', isAuth, PostController.hideComment); //adiciona comentario
+
 module.exports = router;

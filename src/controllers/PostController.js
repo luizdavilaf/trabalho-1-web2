@@ -6,6 +6,7 @@ const { Comment } = require('../models/Comment');
 const { Like } = require('../models/Like');
 const sequelize = require("../database/sequelize-connection");
 const { Sequelize } = require("sequelize");
+const flash = require("connect-flash/lib/flash");
 
 const renderAdd = (req, res) => {
     return res.render("post-insert");
@@ -43,7 +44,7 @@ const create = (req, res) => {
     }
 
     if (req.body.description != undefined) {
-        description = req.body.description.trim();
+        description = req.body.description;
     } else {
         return res.status(500).send("Não pode publicar post sem texto!");
     }
@@ -283,31 +284,49 @@ const listHomePage = (req, res) => {
 
 const detail = async (req, res) => {
     var userId = undefined
-    if (req.session.user!=undefined){
+    if (req.session.user != undefined) {
         userId = req.session.user.id
     }
-    
-    const id = req.params.id;
+
+    const id = Number(req.params.id);
 
     Post.findOne({
         where: { id },
+        subQuery: false,
+        attributes: {
+            include: [[sequelize.fn('COUNT', sequelize.col('likes.postId')), 'likeCount']]
+        },
         include: [{
             model: Image,
             required: false,
-        }, {
+        },
+        {
+            model: Like,
+            attributes: ['userId'],
+            duplicate: false,
+            raw: true
+        },
+        {
             model: User,
             attributes: ['name', 'id']
         },
         {
             model: Comment,
             required: false,
-        }]
+            separate: true,
+            order: sequelize.literal('comment.createdAt DESC'),
+            include: [{
+                model: User,
+                attributes: ['name', 'id']
+            }],
+            where: { hide_comment: false }
+        }],
+        group: 'post.id',
     }).then((post) => {
-        if (post.userId == userId) {
-            res.status(200).render("post-detail", { post, user: req.session.user });
-        } else {
-            res.status(200).render("post-detail", { post, user: req.session.user });
-        }
+        post = post.dataValues
+        var likes = post.likes
+        //console.log(likes)
+        res.status(200).render("post-detail", { post, likes, user: req.session.user, message: req.flash('message') });
 
     }).catch((err) => {
         res.status(500).send({
@@ -347,7 +366,7 @@ const editPost = (req, res) => {
 
     let values = {
         title: req.body.title || "Sem título",
-        description: req.body.description.trim() || "Sem conteúdo"
+        description: req.body.description || "Sem conteúdo"
     }
 
     Post.update(
@@ -440,8 +459,10 @@ const insertComments = (req, res) => {
     }
     Comment.create(
         values
-    ).then((comment)=>{
-        res.send({ comment })
+    ).then((comment) => {
+        req.flash('message', 'Comentário salvo!')
+        res.redirect("/posts/" + req.params.postid);
+
     })
 
 }
@@ -451,7 +472,25 @@ const renderComment = (req, res) => {
     return res.render("comment-insert");
 }
 
+const hideComment = (req, res) => {
+    const commentId = req.params.commentid
+    const values = {hide_comment: true}
+
+    Comment.findOne({ where: { id: commentId }, raw: true })
+    .then((deleted)=>{
+        Comment.update(values, { where: { id: commentId } })
+            .then((result) => {
+                //console.log(deleted)
+                req.flash('message', 'Comentário oculto!')
+                res.redirect("/posts/" + deleted.postId);
+            })
+    })
+    
+    
+}
+
 module.exports = {
+    hideComment,
     renderComment,
     insertComments,
     renderAdd,

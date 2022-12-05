@@ -36,11 +36,24 @@ img {
     margin: 15px;
 }
 
+.comment{
+    border: 2px solid rgb(214, 213, 168);
+    background-color: rgb(81, 85, 126);
+    margin-right: 15px;
+    padding: 8px;
+    width: 500px;
+    
+}
+
+.Postcontainer{
+    border: 2px solid rgb(214, 213, 168);
+    padding: 15px;
+}
+
 textarea {
     width: 100%;
     padding: 12px 20px;
-    margin: 8px 0;
-    height: 200px;
+    margin: 8px;    
     text-anchor: start;
     box-sizing: border-box;
     border: 2px solid rgb(214, 213, 168);
@@ -65,21 +78,17 @@ input {
 }
 
 .btn-danger {
-    background-color: rgb(201, 67, 67);
-    width: 50px;
     height: 30px;
 }
 
-.btn-warning {
-    background-color: gold;
-    width: 50px;
+.btn-warning {    
+   
     height: 30px;
     color: black;
 }
 
 .btn-common {
-    border: 2px solid rgb(214, 213, 168);
-    width: 80px;
+    border: 2px solid rgb(214, 213, 168);    
     height: 30px;
     background-color: rgb(129, 103, 151)
 }
@@ -89,6 +98,9 @@ input {
     position: relative;
 }
 
+.container-comment{
+    display: flex;
+}
 
 
 .images-container {
@@ -248,4 +260,10 @@ body {
     flex-basis: 100px;
     border: 1px solid rgb(214, 213, 168);
 
+}
+
+.text-container{
+    max-width: 900px;
+    text-align: justify;
+    text-indent: 30px;
 }

@@ -4,7 +4,11 @@ const sequelize = require("../database/sequelize-connection");
 
 
 const Like = sequelize.define('like', {
-  user_like: DataTypes.BOOLEAN, 
+  user_like: {
+    type: DataTypes.BOOLEAN, 
+    allowNull: false,
+    defaultValue: true
+  }
 }, {  
   modelName: 'likes'
 });

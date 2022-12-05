@@ -9,7 +9,10 @@
   <br >
   <br >
 
-  <div class="text-container"><%= post.description %></div>
+  <div class="text-container"><p>
+    <%= post.description %>
+    </p>
+  </div>
 
   <div class="post-image-container">
       
@@ -20,7 +23,7 @@
       height="200"
       class="post-image1"
     >
-    <% }else{%>
+    <% }else if(post.images.link){%>
        
        <img
       src="<%=post.images.link%>"
