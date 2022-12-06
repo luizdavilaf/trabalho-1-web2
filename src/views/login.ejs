@@ -10,27 +10,30 @@
    
   </head>
   <body>
-    <div class="container">
-      <%- include('./includes/navbar') %>
-
-      <main>
-        <div class="mainContainer">
-        <h1>login</h1>
-        <div class="form">            
-                <form action="/users/login" method="post">
-                    <label for="email">Email:</label>
-                    <input type="email" name="email" required>
-                    <br>                
-                    <br>
-                    <label for="password">Senha:</label>
-                    <input type="password" name="password" required>
-                    <br>  
-                    <br>  
-                    <button type="submit" class="btn btn-secondary">login</button>
-                </form>
+    <div class="box">
+      <%- include('./includes/header') %>
+      <div class="container">
         
-        </div>
-      </main>
+        <%- include('./includes/navbar2', { user: user || undefined}) %>
+          <main>
+            <div class="mainContainer">
+            <h1>login</h1>
+            <div class="form">            
+                    <form action="/users/login" method="post">
+                        <label for="email">Email:</label>
+                        <input type="email" name="email" required>
+                        <br>                
+                        <br>
+                        <label for="password">Senha:</label>
+                        <input type="password" name="password" required>
+                        <br>  
+                        <br>  
+                        <button type="submit" class="btn btn-secondary">login</button>
+                    </form>            
+            </div>
+          </main>
+      </div>
+      <%- include('./includes/footer') %>
     </div>
   </body>
 </html>

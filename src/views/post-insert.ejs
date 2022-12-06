@@ -12,31 +12,31 @@
     
 </head>
 <body>
-
-    <div class="container">
-    
-    <%- include('./includes/navbar') %>
-    
-    <main>
-        <div class="mainContainer">
-            <h1>Cadastrar novo Post</h1>
-            <div class="form">            
-                <form action="/posts/" method="post">   
-                    <label for="title">Título do post:</label>                    
-                    <input type="text" name="title" >
-                    <br>   
-                    <label for="description">Texto do post:</label>
-                    <br>  
-                    <textarea name="description" required> 
-                    </textarea>
-                    
-                    <br>  
-                    <br>  
-                    <button type="submit" class="btn btn-common">Cadastra</button>
-                </form>
-            </div>
+    <div class="box">
+        <%- include('./includes/header') %>
+        <div class="container">            
+            <%- include('./includes/navbar2', { user: user || undefined}) %>          
+            <main>
+                <div class="mainContainer">
+                    <h1>Cadastrar novo Post</h1>
+                    <div class="form">            
+                        <form action="/posts/" method="post">   
+                            <label for="title">Título do post:</label>                    
+                            <input type="text" name="title" >
+                            <br>   
+                            <label for="description">Texto do post:</label>
+                            <br>  
+                            <textarea name="description" required> 
+                            </textarea>                            
+                            <br>  
+                            <br>  
+                            <button type="submit" class="btn btn-common">Cadastra</button>
+                        </form>
+                    </div>
+                </div>
+            </main>
         </div>
-    </main>
+        <%- include('./includes/footer') %>
     </div>
 </body>
 </html>

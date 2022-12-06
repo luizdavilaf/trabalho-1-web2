@@ -11,35 +11,38 @@
 
 </head>
 <body>
-    <div class="container">
-     <%- include('./includes/navbar') %>
-     <main>
-        <div class="mainContainer">
-            <h1>Inserir imagem no post</h1>
-            <div class="form">            
-                    <form action="/posts/image/<%=postid%>" method="post">
-                        <label for="img1">Imagem 1:</label>
-                        <input type="text" name="images[0]">
-                        <br>    
-                        <label for="img2">Imagem 2:</label>
-                        <input type="text" name="images[1]">
-                        <br>                
-                        <label for="img3">Imagem 3:</label>
-                        <input type="text" name="images[2]">
-                        <br>                
-                        <label for="img4">Imagem 4:</label>
-                        <input type="text" name="images[3]">
-                        <br>                
-                        <label for="img5">Imagem 5:</label>
-                        <input type="text" name="images[4]">
-                        <input type="hidden" name="post" value="<%=post%>">
-                        <br>  
-                        <br>  
-                        <button type="submit" class="btn btn-common">Cadastra</button>
-                    </form>
-            </div>
+    <div class="box">
+        <%- include('./includes/header') %>
+        <div class="container">
+        <%- include('./includes/navbar2', { user: user || undefined}) %>
+            <main>
+                <div class="mainContainer">
+                    <h1>Inserir imagem no post</h1>
+                    <div class="form">            
+                            <form action="/posts/image/<%=postid%>" method="post">
+                                <label for="img1">Imagem 1:</label>
+                                <input type="text" name="images[0]">
+                                <br>    
+                                <label for="img2">Imagem 2:</label>
+                                <input type="text" name="images[1]">
+                                <br>                
+                                <label for="img3">Imagem 3:</label>
+                                <input type="text" name="images[2]">
+                                <br>                
+                                <label for="img4">Imagem 4:</label>
+                                <input type="text" name="images[3]">
+                                <br>                
+                                <label for="img5">Imagem 5:</label>
+                                <input type="text" name="images[4]">
+                                <input type="hidden" name="post" value="<%=post%>">
+                                <br>  
+                                <br>  
+                                <button type="submit" class="btn btn-common">Cadastra</button>
+                            </form>
+                    </div>
+                </div>
+            </main>
         </div>
-    </main>
   </div>  
 </body>
 </html>

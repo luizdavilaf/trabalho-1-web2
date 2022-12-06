@@ -11,35 +11,39 @@
 
 </head>
 <body>
-    <div class="container">
-     <%- include('./includes/navbar') %>
-     <main>
-        <div class="mainContainer">
-            <h1>Cadastrar Usuário</h1>
-            <div class="form">            
-                    <form action="/users/" method="post">
-                        <label for="name">Nome:</label>
-                        <input type="text" name="name" required>
-                        <br>    
-                        <label for="email">Email:</label>
-                        <input type="email" name="email" required>
-                        <br>                
-                        <label for="cpf">CPF:</label>
-                        <input type="number" name="cpf" required>
-                        <br>                
-                        <label for="password">Senha:</label>
-                        <input type="password" name="password" required>
-                        <br>                
-                        <label for="img_url">Imagem:</label>
-                        <input type="text" name="img_url">
-                        
-                        <br>  
-                        <br>  
-                        <button type="submit" class="btn btn-common">Cadastra</button>
-                    </form>
+    <div class="box">
+         <%- include('./includes/header') %>
+        <div class="container">
+        <%- include('./includes/navbar2', { user: user || undefined}) %>
+        <main>
+            <div class="mainContainer">
+                <h1>Cadastrar Usuário</h1>
+                <div class="form">            
+                        <form action="/users/" method="post">
+                            <label for="name">Nome:</label>
+                            <input type="text" name="name" required>
+                            <br>    
+                            <label for="email">Email:</label>
+                            <input type="email" name="email" required>
+                            <br>                
+                            <label for="cpf">CPF:</label>
+                            <input type="number" name="cpf" required>
+                            <br>                
+                            <label for="password">Senha:</label>
+                            <input type="password" name="password" required>
+                            <br>                
+                            <label for="img_url">Imagem:</label>
+                            <input type="text" name="img_url">
+                            
+                            <br>  
+                            <br>  
+                            <button type="submit" class="btn btn-common">Cadastra</button>
+                        </form>
+                </div>
             </div>
-        </div>
-    </main>
-  </div>  
+        </main>
+    </div> 
+    <%- include('./includes/footer') %>
+  </div> 
 </body>
 </html>

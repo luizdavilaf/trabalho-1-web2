@@ -10,47 +10,41 @@
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
-    <div class="container">  
-    <%- include("./includes/navbar") %>
-    <script>
-    const params = new URLSearchParams(window.location.search)
-    const actualPage = params.get('page')  
-    const next = actualPage+1
-    const previous = actualPage-1
-    </script>
-    <main>
-        <div class="mainContainer">
-            <h1>Ultimos Posts</h1>
-
-            
-            <% if (page==1) { %>
-            <a href="#" disabled class="previous1">&laquo; Anterior</a>       
-            <% } else {%>
-            <a href="/posts/?limit=5&page=<%=previous%>" class="previous1">&laquo; Anterior</a>
-            <%page } %>
-            <% if (page==totalPages) { %> 
-            <a href="<%totalPages%>" disabled class="next1">Próximo &raquo;</a>                   
-            <% } else { %><a href="/posts/?limit=5&page=<%=next%>" class="next1">Próximo &raquo;</a><% } %>
-            
-            <div class="search-container">
-                <form action="/posts/" method="get" class="search-bar">
-                <input type="text" placeholder="Busca por título...Pressione enter para buscar" name="title">
-                
-                </form>
-            </div>
-            
-
-            
-            <ul class="post-list">
-            
-            
-            <% for (let i = 0; i < lastPostsPaginated.length; i++) { %>
-                <%- include("./includes/post/show-post",  {post: lastPostsPaginated[i]}) %>
-            <%}  %> 
-            </ul>
+    <div class="box">
+        <%- include('./includes/header') %>
+        <div class="container">  
+            <%- include('./includes/navbar2', { user: user || undefined}) %>
+            <script>
+            const params = new URLSearchParams(window.location.search)
+            const actualPage = params.get('page')  
+            const next = actualPage+1
+            const previous = actualPage-1
+            </script>
+            <main>
+                <div class="mainContainer">
+                    <h1>Ultimos Posts</h1>                
+                    <% if (page==1) { %>
+                    <a href="#" disabled class="previous1">&laquo; Anterior</a>       
+                    <% } else {%>
+                    <a href="/posts/?limit=5&page=<%=previous%>" class="previous1">&laquo; Anterior</a>
+                    <%page } %>
+                    <% if (page==totalPages) { %> 
+                    <a href="<%totalPages%>" disabled class="next1">Próximo &raquo;</a>                   
+                    <% } else { %><a href="/posts/?limit=5&page=<%=next%>" class="next1">Próximo &raquo;</a><% } %>                
+                    <div class="search-container">
+                        <form action="/posts/" method="get" class="search-bar">
+                        <input type="text" placeholder="Busca por título...Pressione enter para buscar" name="title">                    
+                        </form>
+                    </div>                
+                    <ul class="post-list">
+                    <% for (let i = 0; i < lastPostsPaginated.length; i++) { %>
+                        <%- include("./includes/post/show-post",  {post: lastPostsPaginated[i]}) %>
+                    <%}  %> 
+                    </ul>
+                </div>
+            </main>
         </div>
-    </main>
+        <%- include('./includes/footer') %>
     </div>
 </body>
-
 </html>

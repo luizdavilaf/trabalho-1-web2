@@ -11,15 +11,13 @@
     <link rel="stylesheet" href="/css/main.css">
     
     
-     <script>
-    
+     <script>    
         var url = new URL(window.location.href)       
         var postId = url.pathname
         postId= postId.split('/')
         postId = postId[postId.length-1]
-        document.getElementById("form").setAttribute('action',"/posts/comment/"+postId) 
-        
-        </script>
+        document.getElementById("form").setAttribute('action',"/posts/comment/"+postId)         
+    </script>
         
 </head>
 <body>

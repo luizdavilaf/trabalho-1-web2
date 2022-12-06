@@ -9,11 +9,19 @@ const { Sequelize } = require("sequelize");
 const flash = require("connect-flash/lib/flash");
 
 const renderAdd = (req, res) => {
-    return res.render("post-insert");
+    let user = undefined
+    if (req.session.user) {
+        user = req.session.user.id
+    }
+    return res.render("post-insert",{user});
 }
 
 const renderAddImage = (req, res) => {
-    return res.render("insert-post-img");
+    let user = undefined
+    if (req.session.user) {
+        user = req.session.user.id
+    }
+    return res.render("insert-post-img",{user});
 }
 /**
  * Verifica se o id do post está no array de posts
@@ -52,6 +60,7 @@ const create = (req, res) => {
     if (!user) {
         return res.status(500).send("Usuário não encontrado");
     }
+    
 
     Post.create(
         {
@@ -62,7 +71,7 @@ const create = (req, res) => {
     ).then((post) => {
         //console.log(post)
         const postid = post.id
-        res.render("insert-post-img", { postid, post });
+        res.render("insert-post-img", { postid, post,user });
     }).catch((error) => {
         console.log(error)
         res.status(500).send(error);
@@ -183,6 +192,10 @@ const list = (req, res) => {
     var limit
     var lastPostsPaginated = []
     var page
+    let user = undefined
+    if (req.session.user) {
+        user = req.session.user.id
+    }
     if (req.query.limit != undefined && req.query.page != undefined) {
         var limit = parseInt(req.query.limit)
         var page = parseInt(req.query.page)
@@ -221,7 +234,7 @@ const list = (req, res) => {
             .then((result) => {
                 lastPostsPaginated = result.rows
                 totalPages = parseInt(Math.ceil(result.count / limit))
-                res.render("post-list", { lastPostsPaginated, page, limit, total, totalPages, previous, next });
+                res.render("post-list", { lastPostsPaginated, page, limit, total, totalPages, previous, next,user });
             }).catch((err) => {
                 res.status(500).send({
                     success: false,
@@ -248,7 +261,7 @@ const list = (req, res) => {
                 lastPostsPaginated = result.rows
                 //console.log(lastPostsPaginated)
                 totalPages = parseInt(Math.ceil(result.count / limit))
-                res.render("post-list", { lastPostsPaginated, page, limit, total, totalPages, previous, next });
+                res.render("post-list", { lastPostsPaginated, page, limit, total, totalPages, previous, next,user });
             }).catch((err) => {
                 res.status(500).send({
                     success: false,
@@ -304,7 +317,12 @@ const detail = async (req, res) => {
             model: Like,
             attributes: ['userId'],
             duplicate: false,
-            raw: true
+            
+            include: [{
+                model: User,
+                raw: true,
+                attributes: ['name', 'id']
+            }],            
         },
         {
             model: User,
@@ -323,10 +341,18 @@ const detail = async (req, res) => {
         }],
         group: 'post.id',
     }).then((post) => {
+        var likes_user = []
         post = post.dataValues
         var likes = post.likes
+        if(likes.length>0){
+            likes.forEach((like)=>{
+                /* console.log(like.dataValues.user.dataValues) */
+                likes_user.push(like.dataValues.user.dataValues)     
+                 
+            })
+        }
         //console.log(likes)
-        res.status(200).render("post-detail", { post, likes, user: req.session.user, message: req.flash('message') });
+        res.status(200).render("post-detail", { post, likes_user,likes, user: req.session.user, message: req.flash('message') });
 
     }).catch((err) => {
         res.status(500).send({
@@ -346,7 +372,7 @@ const getEdit = (req, res) => {
     Post.findOne({ where: { id: id } })
         .then((post) => {
             if (user != undefined && post.userId == user) {
-                return res.render("post-edit", { post });
+                return res.render("post-edit", { post,user });
             } else {
                 res.status(400).send({ msg: "Este post não pode ser editado por você" });
             }
@@ -363,6 +389,11 @@ const getEdit = (req, res) => {
  */
 const editPost = (req, res) => {
     const id = Number(req.params.id)
+    let user = undefined
+    if (req.session.user) {
+        user = req.session.user.id
+    }
+ 
 
     let values = {
         title: req.body.title || "Sem título",
@@ -387,7 +418,7 @@ const editPost = (req, res) => {
                         }
                     }
                     //console.log(images)
-                    return res.render("edit-img", { images });
+                    return res.render("edit-img", { images,user });
                 }).catch((err) => {
                     res.status(500).send({ error: err });
                 })
@@ -469,7 +500,11 @@ const insertComments = (req, res) => {
 
 
 const renderComment = (req, res) => {
-    return res.render("comment-insert");
+    let user = undefined
+    if (req.session.user) {
+        user = req.session.user.id
+    }
+    return res.render("comment-insert", {user});
 }
 
 const hideComment = (req, res) => {
@@ -484,12 +519,37 @@ const hideComment = (req, res) => {
                 req.flash('message', 'Comentário oculto!')
                 res.redirect("/posts/" + deleted.postId);
             })
+    })   
+}
+
+const likePost = (req, res) => {
+    const obj = {}
+    obj.userId = req.session.user.id
+    obj.postId = req.params.postid
+    Like.findOne({ where: obj })
+    .then((like)=>{
+        if(like){
+            req.flash('message', 'Você já curtiu esse post!')
+            return res.redirect("/posts/" + obj.postId);            
+        }
+        Like.create(obj)
+            .then((result) => {
+                req.flash('message', 'Curtido!')
+                res.redirect("/posts/" + obj.postId);
+            }).catch((err) => {
+                req.flash('message', 'Erro ao curtir!')
+                res.send(500).redirect("/posts/" + obj.postId);
+            })
+        
+    }).catch((err) => {
+        req.flash('message', 'Erro ao curtir!')
+        res.send(500).redirect("/posts/" + obj.postId);
     })
-    
-    
+
 }
 
 module.exports = {
+    likePost,
     hideComment,
     renderComment,
     insertComments,

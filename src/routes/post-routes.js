@@ -31,8 +31,8 @@ router.delete('/image/:postid', PostController.deletePostImages); //deleta image
 
 router.post('/comment/:postid', isAuth, PostController.insertComments); //adiciona comentario
 
-router.get('/comment/:postid', isAuth, PostController.renderComment); //adiciona comentario
+router.get('/like/:postid', isAuth, PostController.likePost); //like post
 
-router.get('/comment/hide/:commentid', isAuth, PostController.hideComment); //adiciona comentario
+router.get('/comment/hide/:commentid', isAuth, PostController.hideComment); //esconde comentario
 
 module.exports = router;

@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Inicio</title>
     <link rel="stylesheet" href="/css/main.css" />
@@ -15,7 +15,7 @@
       <%- include('./includes/header') %>
       <main>
         <div class="container">
-          <%- include('./includes/navbar', { user}) %>
+          <%- include('./includes/navbar2', { user: user || undefined}) %>
           <div class="mainContainer">
             <h1>Ultimos 5 posts do Blog</h1>
             <ul class="post-list">

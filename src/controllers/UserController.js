@@ -9,7 +9,11 @@ const { Post } = require('../models/Post');
 
 
 const renderAdd = (req, res) => {
-    return res.render("user-sign");
+    let user = undefined
+    if (req.session.user) {
+        user = req.session.user.id
+    }
+    return res.render("user-sign",{user});
 }
 
 
@@ -152,22 +156,8 @@ const deleteByCpf = async (req, res) => {
 }
 
 
-class UserController {
-    constructor() {
-        console.log('Iniciando o user controller');
-    }
 
-    /* renderAdd(req, res) {
-        return res.render('users-insert');
-    } */
-
-
-
-
-}
-
-module.exports = {
-    UserController,
+module.exports = {    
     renderAdd,
     deleteByCpf,
     create,

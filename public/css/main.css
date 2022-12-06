@@ -77,22 +77,24 @@ input {
     background-color: rgb(81, 85, 126)
 }
 
-.btn-danger {
-    height: 30px;
+.btn-common {   
+    background-color: rgb(129, 103, 151);    
 }
 
-.btn-warning {    
-   
-    height: 30px;
-    color: black;
+.comments{
+    align-items:center;
 }
 
-.btn-common {
-    border: 2px solid rgb(214, 213, 168);    
-    height: 30px;
-    background-color: rgb(129, 103, 151)
+.formcomment{
+    border: 2px solid rgb(214, 213, 168);
+    padding: 10px;
+    margin-top: 15px;
+    align-items:center;
 }
 
+.containerPop {
+    margin-top: 150px;
+}
 .btn-search {
     display: inline;
     position: relative;
@@ -138,6 +140,11 @@ nav li:hover {
     background-color: rgb(129, 103, 151);
 }
 
+.nav-item {
+    width: 200px;
+    color: rgb(187, 187, 187);
+}
+
 li {
     
     height: 80px;
@@ -153,14 +160,19 @@ li {
 
 }
 
+.jumbotron{
+    background-color: rgb(129, 103, 151);
+}
+
 .post-card {
     border: 1px solid rgb(214, 213, 168);
     border-radius: 5px;
     height: 80%;
     width: 100%;
+    align-items: center;
     text-align: center;
     display: table;
-    margin: 15px;    
+    margin-left: 30%;
 }
 
 .post-card-with-image {
@@ -168,15 +180,24 @@ li {
     border-radius: 5px;
     height: fit-content;
     color: rgb(129, 103, 151);
-    width: 100%;
-    margin: 2px;
+    width:auto;
+    margin-bottom: 10px;
+    align-items:center;
+    padding: 20px;
+}
 
+a:link{
+    color: rgb(187, 187, 187); 
+}
 
+.nav-link{
+    color: rgb(187, 187, 187);
 }
 
 .post-list {
     display: flexbox;
     flex-wrap: wrap;
+    
 
 
 }
@@ -219,6 +240,7 @@ body {
 .box .header {
     flex-grow: 0;
     flex-basis: auto;
+    background-color: rgb(129, 103, 151);
     border: 1pt solid rgb(214, 213, 168);
 
 }
@@ -242,12 +264,11 @@ body {
 .mainContainer {
 
     flex-grow: 1;
-    margin: 8px;
+    margin-left: 20%;
     padding: 10px;
     /* border: 1px solid rgb(214, 213, 168); */
-    height: 720px;
+    min-height: 720px;
     min-width: max-content;
-
     flex-basis: auto;
 
 
@@ -255,7 +276,7 @@ body {
 }
 
 .box .footer {
-
+    text-align: center;
     flex-grow: 0;
     flex-basis: 100px;
     border: 1px solid rgb(214, 213, 168);

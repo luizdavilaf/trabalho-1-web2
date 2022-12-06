@@ -12,48 +12,51 @@
     
     </head>
 <body>
-    <div class="container">  
-    <%- include("./includes/navbar") %>
-  
-    <main>
-        <div class="mainContainer">
-            <h1>Posts de <%- user.name %></h1>
+    <div class="box">
+        <%- include('./includes/header') %>
+        <div class="container">  
+           <%- include('./includes/navbar2', { user: user || undefined}) %>
+        
+            <main>
+                <div class="mainContainer">
+                    <h1>Posts de <%- user.name %></h1>
 
-            <ul class="post-list">
-            
-                <table class="table table-striped table-hover table-bordered table-dark ">
-                    <thead>
-                        <tr>
-                            <th>Titulo</th>
-                            <th><a href="/users/<%-user.name%>">Data de Publicação</a></th>
-                            <th><a href="/users/<%-user.name%>?order=likes">Contagem de likes</a></th>
-                                                        
-                        </tr>
-                    <thead>
-                    <tbody id="postsDoUsuario">
-
-                        <% if(posts.length){ %>                    
-                            <% for(let i = 0; i < posts.length; i++) { %>
-                                    <tr>
-                                        
-                                        <td><%=posts[i].title%></td>
-                                        <td><%= new Date(posts[i].createdAt).toLocaleDateString();%></td>
-                                        <td><%=posts[i].likeCount%></td>
-                                        <td><a href="/posts/<%-posts[i].id%>">Ir para o Post</a> </td>        
+                    <ul class="post-list">
+                    
+                        <table class="table table-striped table-hover table-bordered table-dark ">
+                            <thead>
+                                <tr>
+                                    <th>Titulo</th>
+                                    <th><a href="/users/<%-user.name%>">Data de Publicação</a></th>
+                                    <th><a href="/users/<%-user.name%>?order=likes">Contagem de likes</a></th>
                                                                 
+                                </tr>
+                            <thead>
+                            <tbody id="postsDoUsuario">
+
+                                <% if(posts.length){ %>                    
+                                    <% for(let i = 0; i < posts.length; i++) { %>
+                                            <tr>
+                                                
+                                                <td><%=posts[i].title%></td>
+                                                <td><%= new Date(posts[i].createdAt).toLocaleDateString();%></td>
+                                                <td><%=posts[i].likeCount%></td>
+                                                <td><a href="/posts/<%-posts[i].id%>">Ir para o Post</a> </td>        
+                                                                        
+                                            </tr>
+                                        <% } %>
+                                
+                                <% }else{ %>
+                                    <tr>
+                                        <td>Sem posts para o usuário</td>
                                     </tr>
                                 <% } %>
-                        
-                        <% }else{ %>
-                            <tr>
-                                <td>Sem posts para o usuário</td>
-                            </tr>
-                        <% } %>
-                    </tbody>
-                </table>            
-            </ul>
+                            </tbody>
+                        </table>            
+                    </ul>
+                </div>
+            </main>
         </div>
-    </main>
     </div>
 </body>
 

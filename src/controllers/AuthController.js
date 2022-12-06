@@ -1,8 +1,9 @@
 const db = require('../database/dbconnection');
 const { User } = require('../models/User');
 
-const renderLogin = (req, res) => {
-    return res.render("login");
+const renderLogin = (req, res) => {   
+    var user = undefined 
+    return res.render("login", {user});
 }
 
 const login = async (req, res) => {
@@ -38,8 +39,16 @@ const login = async (req, res) => {
 
 }
 
+const logout = (req, res) =>{
+    if (req.session) {        
+        req.session.destroy();
+        return res.status(200).send('<script>alert("Você foi deslogado!"); window.location.href="/" ; </script>');
+    }
+    return res.redirect("/")
+}
 
 module.exports = {
+    logout,
     login,
     renderLogin
 }

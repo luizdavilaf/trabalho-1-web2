@@ -8,6 +8,8 @@ const isAdmin = require('../middlewares/isAdmin');
 
 router.post('/login', AuthController.login);
 
+router.get('/logout', AuthController.logout);
+
 router.get('/login', AuthController.renderLogin);
 
 router.post('/', UserController.create);
